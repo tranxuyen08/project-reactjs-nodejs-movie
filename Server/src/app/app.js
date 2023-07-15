@@ -8,6 +8,7 @@ const dataConnect = require('../configs/configsDb')
 const userRoutes = require('../app/routes/user.routes')
 const movieRoutes = require('../app/routes/movie.routes')
 const favoriteRoute = require('../app/routes/favorite.routes')
+const commentsRoute = require('./routes/comments.routes')
 //middleware
 app.use(express.urlencoded());
 app.use(bodyParser.json());
@@ -29,6 +30,7 @@ dataConnect.connect()
 app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/movie', movieRoutes)
 app.use('/api/v1/favorite', favoriteRoute)
+app.use('/api/v1/comments', commentsRoute)
 
 //handle errors
 
