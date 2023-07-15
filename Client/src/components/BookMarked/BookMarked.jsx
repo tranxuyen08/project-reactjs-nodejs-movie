@@ -21,7 +21,7 @@ const BookMarked = () => {
   const handleDeleteFavorite = async (id) => {
     try {
       await BaseAxios.delete(`/api/v1/favorite/${id}`);
-      setReloadData(true);
+      setReloadData(!reloadData);
     } catch (error) {
       console.error("Error:", error);
     }

@@ -14,7 +14,7 @@ const RightBar = () => {
               placeholder="Search..."
             />
           </div>
-          <ul className="list-hagtag">
+          {/* <ul className="list-hagtag">
             <li className="item-hagtag">
               <Link to="/drama">
                 <span>Drama</span>
@@ -35,7 +35,7 @@ const RightBar = () => {
                 <span>Familyzzzz</span>
               </Link>
             </li>
-          </ul>
+          </ul> */}
           <div className="trending">
             <h3 className="title-h3">Trending</h3>
             <Link to="/trending" className="trending-movie">

@@ -9,7 +9,7 @@ import BaseAxios from "../../api/axiosClient";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import FadingBox from "../Model/Model";
 
-const Detail = () => {
+const Detail = ({setReCallApiComment}) => {
   const params = useParams();
   const navigate = useNavigate();
   const [value, setValue] = useState();
@@ -19,6 +19,7 @@ const Detail = () => {
   const [linkWatching, setLinkWatching] = useState();
   const [activeTab, setActiveTab] = useState("overview");
   const [isModelOpen, setIsModelOpen] = useState(false); // Add isModelOpen state variable
+  const [comment, setComment] = useState();
 
   const handleWatchingClick = () => {
     if (movie.role_movie == 1) {
@@ -55,9 +56,22 @@ const Detail = () => {
         console.error(11111111, errors);
       });
   };
+  const handleGetComment = async () => {
+    BaseAxios.get("/api/v1/comments")
+      .then((res) => {
+        const dataComments = res.data.data;
+        dataComments?.map((item) => {
+          setComment(item);
+        });
+      })
+      .catch((errors) => {
+        console.error(11111111, errors);
+      });
+  };
 
   useEffect(() => {
     fetchMovie();
+    handleGetComment();
   }, []);
 
   const handleTabChange = (tab) => {
@@ -157,64 +171,18 @@ const Detail = () => {
               <div>
                 <p className="text-ratting">Comment</p>
                 <div className="wrapper-comment">
-                  {/* {comments.map((comment) => ( */}
-                  <div className="show-comment">
-                    <div className="user">
-                      <div className="wrapper-img">
-                        <img src="/image/download.jpeg" alt="User Avatar" />
+                    <div className="show-comment">
+                      <div className="user">
+                        <div className="wrapper-img">
+                          <img src={comment?.idUser?.avatar.slice(1)} alt="User Avatar" />
+                        </div>
+                        <p className="name-comment">{comment?.idUser?.firstName + comment?.idUser?.lastName}</p>
                       </div>
-                      <p className="name-comment">Xuyen</p>
-                    </div>
-                    <div className="wrapper-comment-content">
-                      <p>noi dung comment</p>
-                    </div>
-                  </div>
-                  <div className="show-comment">
-                    <div className="user">
-                      <div className="wrapper-img">
-                        <img src="/image/download.jpeg" alt="User Avatar" />
+                      <div className="wrapper-comment-content">
+                        <p>{comment?.titleComment}</p>
                       </div>
-                      <p className="name-comment">Xuyen</p>
                     </div>
-                    <div className="wrapper-comment-content">
-                      <p>noi dung comment</p>
-                    </div>
-                  </div>
-                  <div className="show-comment">
-                    <div className="user">
-                      <div className="wrapper-img">
-                        <img src="/image/download.jpeg" alt="User Avatar" />
-                      </div>
-                      <p className="name-comment">Xuyen</p>
-                    </div>
-                    <div className="wrapper-comment-content">
-                      <p>noi dung comment</p>
-                    </div>
-                  </div>
-                  <div className="show-comment">
-                    <div className="user">
-                      <div className="wrapper-img">
-                        <img src="/image/download.jpeg" alt="User Avatar" />
-                      </div>
-                      <p className="name-comment">Xuyen</p>
-                    </div>
-                    <div className="wrapper-comment-content">
-                      <p>noi dung comment</p>
-                    </div>
-                  </div>
-                  {/* ))} */}
                 </div>
-                <form className="comment-form">
-                  <input
-                    type="text"
-                    // value={newComment}
-                    // onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Write a comment..."
-                  />
-                  <button type="submit" className="btn">
-                    <AiOutlineSend />
-                  </button>
-                </form>
               </div>
             )}
           </div>

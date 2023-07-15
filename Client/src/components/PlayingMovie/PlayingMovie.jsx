@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlineStar } from "react-icons/ai";
+import { AiOutlineSend, AiOutlineStar } from "react-icons/ai";
 import { MdFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
 import "./PlayingMovie.css";
 import BaseAxios from "../../api/axiosClient";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { BiSolidLike } from "react-icons/bi";
 const PlayingMovie = () => {
   const params = useParams();
   const [movie, setMovie] = useState();
   const [width, setWidth] = useState("560");
   const [height, setHight] = useState("315");
   const [isCheckFavorite, setIsCheckFavorite] = useState(false);
+  const [comment, setComment] = useState();
 
   const fetchMovie = async () => {
     try {
@@ -28,7 +30,7 @@ const PlayingMovie = () => {
       const response = await BaseAxios.get(`/api/v1/favorite`);
       const favorites = response.data;
       const isFavorite = favorites.some(
-        (favorite) => favorite.idMovie === params?.id
+        (favorite) => favorite?.idMovie === params?.id
       );
       setIsCheckFavorite(isFavorite);
     } catch (error) {
@@ -36,9 +38,24 @@ const PlayingMovie = () => {
     }
   };
 
+  const handleGetComment = async () => {
+    BaseAxios.get("/api/v1/comments")
+      .then((res) => {
+        const dataComments = res.data.data;
+        dataComments?.map((item) => {
+          setComment(item);
+        });
+      })
+      .catch((errors) => {
+        console.error(errors);
+      });
+  };
+  console.log(comment);
+
   useEffect(() => {
     fetchMovie();
     handleCheckFavorite();
+    handleGetComment()
   }, []);
 
   const handleFullScreen = () => {
@@ -61,7 +78,7 @@ const PlayingMovie = () => {
     };
     try {
       if (isCheckFavorite) {
-        await BaseAxios.post(`/api/v1/favorite`,requestData);
+        await BaseAxios.post(`/api/v1/favorite`, requestData);
         setIsCheckFavorite(!isCheckFavorite);
         console.log("Đã xoá yêu thích");
       } else {
@@ -98,8 +115,8 @@ const PlayingMovie = () => {
           </div>
           <div className="action">
             <div className="ratting">
-              <AiOutlineStar className="star" />
               <p>{movie?.vote_average}</p>
+              <AiOutlineStar className="icon-ratting" />
             </div>
             <p onClick={() => handleFavorite(movie?._id)}>
               {isCheckFavorite ? (
@@ -119,78 +136,33 @@ const PlayingMovie = () => {
               <h3 className="">Comments:</h3>
               <ul id="comment-list">
                 <li className="item-content">
+                  <div className="cmt-content">
+                    <p className="cmt-content-text">Asdasddasdasdadasdasdasdasdasdasdasdasd</p>
+                  </div>
                   <div className="user-cmt">
                     <div className="avatar">
                       <img src="/image/download.jpeg" alt="" />
+                      <p className="user-name">Johnny</p>
                     </div>
-                    <div className="user-name">
-                      <p>XuyenTN :</p>
+                    <div className="like-wrapper">
+                      <BiSolidLike className="like-icon"/>
+                      <span className="num-like">5</span>
                     </div>
-                  </div>
-                  <div className="">
-                    <p className="">asdasddasdasdadasdasdasdasdasdasdasdasd</p>
                   </div>
                 </li>
-                <li className="item-content">
-                  <div className="user-cmt">
-                    <div className="avatar">
-                      <img src="/image/download.jpeg" alt="" />
-                    </div>
-                    <div className="user-name">
-                      <p>XuyenTN :</p>
-                    </div>
-                  </div>
-                  <div className="">
-                    <p className="">asdasddasdasdadasdasdasdasdasdasdasdasd</p>
-                  </div>
-                </li>
-                <li className="item-content">
-                  <div className="user-cmt">
-                    <div className="avatar">
-                      <img src="/image/download.jpeg" alt="" />
-                    </div>
-                    <div className="user-name">
-                      <p>XuyenTN :</p>
-                    </div>
-                  </div>
-                  <div className="">
-                    <p className="">asdasddasdasdadasdasdasdasdasdasdasdasd</p>
-                  </div>
-                </li>
-                <li className="item-content">
-                  <div className="user-cmt">
-                    <div className="avatar">
-                      <img src="/image/download.jpeg" alt="" />
-                    </div>
-                    <div className="user-name">
-                      <p>XuyenTN :</p>
-                    </div>
-                  </div>
-                  <div className="">
-                    <p className="">asdasddasdasdadasdasdasdasdasdasdasdasd</p>
-                  </div>
-                </li>
-                <li className="item-content">
-                  <div className="user-cmt">
-                    <div className="avatar">
-                      <img src="/image/download.jpeg" alt="" />
-                    </div>
-                    <div className="user-name">
-                      <p>XuyenTN :</p>
-                    </div>
-                  </div>
-                  <div className="">
-                    <p className="">asdasddasdasdadasdasdasdasdasdasdasdasd</p>
-                  </div>
-                </li>
+
+
               </ul>
-              <form id="comment-form">
+              <form className="comment-form">
                 <input
                   type="text"
-                  id="comment-input"
+                  // value={newComment}
+                  // onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Write a comment..."
                 />
-                <button type="submit">Submit</button>
+                <button type="submit" className="btn btn-submit">
+                  <AiOutlineSend />
+                </button>
               </form>
             </div>
           </div>

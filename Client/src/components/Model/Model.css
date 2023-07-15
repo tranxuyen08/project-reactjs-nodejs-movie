@@ -25,7 +25,7 @@
 .modal-content {
   width: 300px;
   height: 480px;
-  background-color: var(--secondary-color);
+  background-color: #4a4a4a;
   color: #fff;
   border-radius: 8px;
 }

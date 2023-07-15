@@ -25,10 +25,10 @@ const Sidebar = () => {
       <div className="container">
         <div>
           <div className="wrapper-header">
-            <div className="wrapper-img">
+            <Link to='/' className="wrapper-img">
               <img src="/image/zyro-image (1).png" alt="logo" />
-            </div>
-            <h1>Movie&Chill</h1>
+            </Link>
+            <h1>FixCode&Chill</h1>
           </div>
           <div className="list-nav">
             <div className="item-nav">

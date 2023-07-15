@@ -19,11 +19,10 @@
 
 }
 .card-link>p {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+text-align: center;
   padding: 5px;
-  color: var(--secondary-color);
+  color: #333;
+  font-weight: 600;
 }
 .item-card:hover {
   transform: scale(1.05);
@@ -33,4 +32,14 @@
   top: 10px;
   left: 10px;
   background-color: #5C80F7;
+}
+
+.ratting.ratting-card {
+  display: flex;
+  align-items: center;
+}
+
+.icon-ratting {
+  margin-top: 2px;
+  color: yellowgreen;
 }

@@ -1,10 +1,10 @@
 .set-side-bar {
   position: fixed;
   background-color: var(--primary-color);
-  width: 22%;
+  width: 20%;
   height: 100vh;
   z-index: 100;
-  border-right: 1px solid #636363;
+  border-right: 1px solid #313131;
 }
 
 .wrapper-header {
