@@ -16,35 +16,26 @@ import Profile from './components/Profile/Profile';
 import Detail from './components/Detail/Detail';
 import PlayingMovie from './components/PlayingMovie/PlayingMovie';
 import BookMarked from './components/BookMarked/BookMarked';
+import RequiredAuth from './components/RequireAuth';
 function App() {
   return (
     <div >
       {/* <DefaultLayout /> */}
       <Routes>
-        <Route
-          path="/"
-          element={
-            <DefaultLayout>
-              <Header />
-              <Slide />
-              <ShowMovie />
-            </DefaultLayout>
-          }
-        />
-        <Route
-          path="/search"
-          element={
-            <DefaultLayout>
-              <Search />
-            </DefaultLayout>
-          }
-        />
-        <Route path='/explore' element={<DefaultLayout>
-          <FindFilm />
-        </DefaultLayout>} />
-        <Route path='/detail/:id' element={<DefaultLayout>
-          <Detail />
-        </DefaultLayout>} />
+        <Route path="/" element={
+          <DefaultLayout>
+            <Header />
+            <Slide />
+            <ShowMovie />
+          </DefaultLayout>} />
+        <Route path="/search" element={<DefaultLayout><Search /></DefaultLayout>} />
+        <Route path='/explore' element={<DefaultLayout><FindFilm /></DefaultLayout>} />
+        {/* kiem tra xem accessToken ddusng khong thi moi chi di den component do */}
+        <Route element={<RequiredAuth />}>
+          <Route path='/detail/:id' element={<DefaultLayout>
+            <Detail />
+          </DefaultLayout>} />
+        </Route>
         <Route path='/playing-movie/:id' element={<DefaultLayout><PlayingMovie /></DefaultLayout>} />
         <Route path='/login' element={<LoginLayout><Login /></LoginLayout>} />
         <Route path='/register' element={<LoginLayout><Register /></LoginLayout>} />

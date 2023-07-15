@@ -12,7 +12,10 @@ import "./ShowMovie.css";
 // import required modules
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { Link } from "react-router-dom";
-import { getMovieRate, getMovieShowSlide } from "../../redux/reducer/movieSlice";
+import {
+  getMovieRate,
+  getMovieShowSlide,
+} from "../../redux/reducer/movieSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function ShowMovie() {
@@ -23,8 +26,8 @@ export default function ShowMovie() {
     try {
       await dispatch(getMovieShowSlide());
       const data = await dispatch(getMovieRate());
-      setToprate(data.payload)
-      console.log(1111,data.payload);
+      setToprate(data.payload);
+      console.log(1111, data.payload);
     } catch (err) {
       console.log(err);
     }

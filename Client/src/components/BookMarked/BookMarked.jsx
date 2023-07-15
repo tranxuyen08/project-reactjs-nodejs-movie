@@ -41,7 +41,9 @@ const BookMarked = () => {
           <div className="wrapper-list-card">
             <ul className="list-card">
               {dataFavorite.length === 0 ? (
-                <p>No favorite movies found.</p>
+                <div className="img-notfound">
+                  {/* <img src="/image/fav-3.png" alt="" /> */}
+                </div>
               ) : (
                 dataFavorite.map((item) => {
                   const imgURL =
