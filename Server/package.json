@@ -1,0 +1,31 @@
+{
+  "name": "express-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon node --inspect src/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.22"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
+    "mongodb": "^5.7.0",
+    "mongoose": "^7.3.2",
+    "mongoose-delete": "^1.0.1",
+    "mongoose-slug-generator": "^1.0.4",
+    "mysql2": "^3.4.3",
+    "sequelize": "^6.32.1"
+  }
+}

@@ -1,0 +1,143 @@
+.playing-movie{
+  background-color: var(--primary-color);
+}
+.wrapper-playing{
+  padding-top: 30px;
+}
+.wrapper-video{
+  width: 100%;
+  height: 350px;
+  margin-bottom: 20px;
+}
+iframe{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.title-movie{
+  margin-bottom: 20px;
+}
+.star{
+  color: #5278F6;
+  font-size: 15px;
+}
+.ratting{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.ratting > p{
+  color: var(--secondary-color);
+}
+.over-view > p{
+  color: var(--secondary-color);
+  font-weight: 600;
+  font-size: 16px;
+}
+/* .playing-movie {
+  background-color: #f2f2f2;
+  padding: 20px;
+} */
+
+.comment {
+  margin-top: 20px;
+  padding-bottom: 30px;
+}
+
+.content-comment h3 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.content-comment ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.user-name > p{
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+#comment-form {
+  margin-top: 10px;
+  display: flex;
+}
+
+#comment-input {
+  flex: 1;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#comment-form button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#comment-form button:hover {
+  background-color: #555;
+}
+
+.content-comment >h3{
+  color: var(--quaternary-color);
+}
+.avatar > img{
+  border-radius: 50%;
+}
+#comment-list{
+  height: 300px;
+  background-color: var(--quaternary-color);
+  overflow-y: scroll;
+}
+.item-content{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #cecaca;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 10px 0 10px 0 rgba(0, 0, 0, 0.3);
+}
+.user-cmt{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.action{
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+.icon-favorite{
+  color: var(--tertiary-color);
+  font-size: 30px;
+  cursor: pointer;
+  animation: pulsate 1s ease-in-out infinite;
+}
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.favorite-selected{
+  color: red !important;
+}
+
+

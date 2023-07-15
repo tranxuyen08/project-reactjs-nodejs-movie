@@ -1,0 +1,35 @@
+const bodyParser = require('body-parser');
+const express = require('express');
+const morgan = require('morgan');
+const app = express();
+const helmet = require('helmet')
+const cors = require('cors')
+const dataConnect = require('../configs/configsDb')
+const userRoutes = require('../app/routes/user.routes')
+const movieRoutes = require('../app/routes/movie.routes')
+const favoriteRoute = require('../app/routes/favorite.routes')
+//middleware
+app.use(express.urlencoded());
+app.use(bodyParser.json());
+app.use(morgan('dev'));
+app.use(helmet());
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions))
+
+//database
+
+dataConnect.connect()
+//router
+
+app.use('/api/v1/users', userRoutes)
+app.use('/api/v1/movie', movieRoutes)
+app.use('/api/v1/favorite', favoriteRoute)
+
+//handle errors
+
+module.exports = app
