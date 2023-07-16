@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlineSend, AiOutlineStar } from "react-icons/ai";
+import { AiFillStar, AiOutlineSend } from "react-icons/ai";
 import { MdFavorite, MdOutlineFavoriteBorder } from "react-icons/md";
 import "./PlayingMovie.css";
 import BaseAxios from "../../api/axiosClient";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { BiSolidLike } from "react-icons/bi";
-const PlayingMovie = () => {
+const PlayingMovie = ({ reCallApiComment }) => {
   const params = useParams();
   const [movie, setMovie] = useState();
   const [width, setWidth] = useState("560");
   const [height, setHight] = useState("315");
   const [isCheckFavorite, setIsCheckFavorite] = useState(false);
   const [comment, setComment] = useState();
-
+  const [inputComment, setInputComment] = useState();
+  const [isCheckCmt, setIsCheckCmt] = useState(false);
   const fetchMovie = async () => {
     try {
       const response = await BaseAxios.get(`/api/v1/movie/${params?.id}`);
@@ -39,23 +39,25 @@ const PlayingMovie = () => {
   };
 
   const handleGetComment = async () => {
-    BaseAxios.get("/api/v1/comments")
+    const id = params.id;
+    BaseAxios.get(`/api/v1/comments/${id}`)
       .then((res) => {
         const dataComments = res.data.data;
-        dataComments?.map((item) => {
-          setComment(item);
-        });
+        setComment(dataComments);
       })
       .catch((errors) => {
         console.error(errors);
       });
   };
-  console.log(comment);
+
+  useEffect(() => {
+    handleGetComment();
+  }, [isCheckCmt]);
 
   useEffect(() => {
     fetchMovie();
     handleCheckFavorite();
-    handleGetComment()
+    handleGetComment();
   }, []);
 
   const handleFullScreen = () => {
@@ -91,6 +93,22 @@ const PlayingMovie = () => {
     }
   };
 
+  const handleComment = async (e) => {
+    e.preventDefault();
+    if (inputComment !== "") {
+      try {
+        const requestBody = {
+          idMovie: params.id,
+          titleComment: inputComment,
+        };
+        await BaseAxios.post("/api/v1/comments", requestBody);
+        setIsCheckCmt(!isCheckCmt);
+        setInputComment("");
+      } catch (error) {
+        console.error("Error submitting comment:", error);
+      }
+    }
+  };
   return (
     <section className="playing-movie">
       <div className="container-middle">
@@ -116,7 +134,7 @@ const PlayingMovie = () => {
           <div className="action">
             <div className="ratting">
               <p>{movie?.vote_average}</p>
-              <AiOutlineStar className="icon-ratting" />
+              <AiFillStar className="icon-ratting" />
             </div>
             <p onClick={() => handleFavorite(movie?._id)}>
               {isCheckFavorite ? (
@@ -135,29 +153,36 @@ const PlayingMovie = () => {
             <div className="content-comment">
               <h3 className="">Comments:</h3>
               <ul id="comment-list">
-                <li className="item-content">
-                  <div className="cmt-content">
-                    <p className="cmt-content-text">Asdasddasdasdadasdasdasdasdasdasdasdasd</p>
-                  </div>
-                  <div className="user-cmt">
-                    <div className="avatar">
-                      <img src="/image/download.jpeg" alt="" />
-                      <p className="user-name">Johnny</p>
-                    </div>
-                    <div className="like-wrapper">
-                      <BiSolidLike className="like-icon"/>
-                      <span className="num-like">5</span>
-                    </div>
-                  </div>
-                </li>
-
-
+                {comment &&
+                  comment?.map((item) => {
+                    return (
+                      <li className="item-content" key={item?._id}>
+                        <div className="cmt-content">
+                          <p className="cmt-content-text">
+                            {item?.titleComment}
+                          </p>
+                        </div>
+                        <div className="user-cmt">
+                          <div className="avatar">
+                            <img src={item?.idUser?.avatar.slice(1)} alt="" />
+                            <p className="user-name">
+                              {item?.idUser?.firstName + item?.idUser?.lastName}
+                            </p>
+                          </div>
+                          <div className="like-wrapper">
+                            <BiSolidLike className="like-icon" />
+                            <span className="num-like">5</span>
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })}
               </ul>
-              <form className="comment-form">
+              <form className="comment-form" onSubmit={handleComment}>
                 <input
                   type="text"
-                  // value={newComment}
-                  // onChange={(e) => setNewComment(e.target.value)}
+                  value={inputComment}
+                  onChange={(e) => setInputComment(e.target.value)}
                   placeholder="Write a comment..."
                 />
                 <button type="submit" className="btn btn-submit">

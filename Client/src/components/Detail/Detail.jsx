@@ -9,7 +9,7 @@ import BaseAxios from "../../api/axiosClient";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import FadingBox from "../Model/Model";
 
-const Detail = ({setReCallApiComment}) => {
+const Detail = ({}) => {
   const params = useParams();
   const navigate = useNavigate();
   const [value, setValue] = useState();
@@ -19,7 +19,7 @@ const Detail = ({setReCallApiComment}) => {
   const [linkWatching, setLinkWatching] = useState();
   const [activeTab, setActiveTab] = useState("overview");
   const [isModelOpen, setIsModelOpen] = useState(false); // Add isModelOpen state variable
-  const [comment, setComment] = useState();
+  const [comments, setComments] = useState([]);
 
   const handleWatchingClick = () => {
     if (movie.role_movie == 1) {
@@ -57,15 +57,14 @@ const Detail = ({setReCallApiComment}) => {
       });
   };
   const handleGetComment = async () => {
-    BaseAxios.get("/api/v1/comments")
+    const id = params.id;
+    BaseAxios.get(`/api/v1/comments/${id}`)
       .then((res) => {
         const dataComments = res.data.data;
-        dataComments?.map((item) => {
-          setComment(item);
-        });
+        setComments(dataComments);
       })
       .catch((errors) => {
-        console.error(11111111, errors);
+        console.error(errors);
       });
   };
 
@@ -105,35 +104,25 @@ const Detail = ({setReCallApiComment}) => {
           </div>
         </div>
         <div className="content-movie">
-          <div className="content-movie-left">
-            <div style={{ width: 50, height: 50 }}>
-              <p className="text-ratting">Ratting</p>
-              <CircularProgressbar value={value * 10} />
-            </div>
-            <div className="ep-length">
-              <p className="text-ratting">Ep Length</p>
-              <span>1h20p</span>
-            </div>
-          </div>
           <div className="content-movie-middle">
             <div className="tab-links">
               <Link
                 to=""
-                className={activeTab === "overview" ? "active" : ""}
+                className={activeTab === "overview" ? "activeDetail" : ""}
                 onClick={() => handleTabChange("overview")}
               >
                 Overview
               </Link>
               <Link
                 to=""
-                className={activeTab === "vote" ? "active" : ""}
+                className={activeTab === "vote" ? "activeDetail" : ""}
                 onClick={() => handleTabChange("vote")}
               >
                 Vote
               </Link>
               <Link
                 to=""
-                className={activeTab === "comment" ? "active" : ""}
+                className={activeTab === "comment" ? "activeDetail" : ""}
                 onClick={() => handleTabChange("comment")}
               >
                 Comment
@@ -158,30 +147,44 @@ const Detail = ({setReCallApiComment}) => {
                   <p className="detail-content">
                     Language: <span>English</span>
                   </p>
+                  <p className="detail-content">Ep Length: <span>1h20p</span></p>
                 </div>
               </div>
             )}
             {activeTab === "vote" && (
               <div>
-                <p className="text-ratting">Vote</p>
-                {/* Hiển thị nội dung của tab Vote */}
+                <div className="content-movie-left">
+                  <div style={{ width: 50, height: 50 }}>
+                    <p className="text-ratting">Ratting</p>
+                    <CircularProgressbar value={value * 10} />
+                    <p className="text-ratting">{value * 10}%</p>
+                  </div>
+                </div>
               </div>
             )}
             {activeTab === "comment" && (
               <div>
                 <p className="text-ratting">Comment</p>
                 <div className="wrapper-comment">
+                  {comments?.map((comment) => (
                     <div className="show-comment">
                       <div className="user">
                         <div className="wrapper-img">
-                          <img src={comment?.idUser?.avatar.slice(1)} alt="User Avatar" />
+                          <img
+                            src={comment?.idUser?.avatar.slice(1)}
+                            alt="User Avatar"
+                          />
                         </div>
-                        <p className="name-comment">{comment?.idUser?.firstName + comment?.idUser?.lastName}</p>
+                        <p className="name-comment">
+                          {comment?.idUser?.firstName +
+                            comment?.idUser?.lastName}
+                        </p>
                       </div>
                       <div className="wrapper-comment-content">
                         <p>{comment?.titleComment}</p>
                       </div>
                     </div>
+                  ))}
                 </div>
               </div>
             )}

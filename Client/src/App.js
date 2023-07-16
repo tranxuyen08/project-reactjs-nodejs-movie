@@ -17,8 +17,8 @@ import Detail from './components/Detail/Detail';
 import PlayingMovie from './components/PlayingMovie/PlayingMovie';
 import BookMarked from './components/BookMarked/BookMarked';
 import RequiredAuth from './components/RequireAuth';
+import Payment from './components/Payment/Payment';
 function App() {
-  const [reCallApiComment, setReCallApiComment] = useState()
   return (
     <div >
       {/* <DefaultLayout /> */}
@@ -34,14 +34,15 @@ function App() {
         {/* kiem tra xem accessToken ddusng khong thi moi chi di den component do */}
         <Route element={<RequiredAuth />}>
           <Route path='/detail/:id' element={<DefaultLayout>
-            <Detail setReCallApiComment={setReCallApiComment}/>
+            <Detail/>
           </DefaultLayout>} />
         </Route>
-        <Route path='/playing-movie/:id' element={<DefaultLayout><PlayingMovie reCallApiComment={reCallApiComment}/></DefaultLayout>} />
+        <Route path='/playing-movie/:id' element={<DefaultLayout><PlayingMovie/></DefaultLayout>} />
         <Route path='/login' element={<LoginLayout><Login /></LoginLayout>} />
         <Route path='/register' element={<LoginLayout><Register /></LoginLayout>} />
         <Route path='/profile' element={<LayoutProfile><Profile /></LayoutProfile>} />
         <Route path='/bookmarked' element={<LayoutProfile><BookMarked /></LayoutProfile>} />
+        <Route path='/check-out' element={<LayoutProfile><Payment/></LayoutProfile>}/>
       </Routes>
       {/* <Footer /> */}
     </div>

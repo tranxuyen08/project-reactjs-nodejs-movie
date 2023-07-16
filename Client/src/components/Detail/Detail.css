@@ -53,8 +53,9 @@
   box-shadow: 0 0 10px rgba(186, 185, 185, 0.3);
 }
 .content-movie-left{
-  width: 15%;
-  border-right: 1px solid #313131;
+  margin: 0 auto;
+  width: 25%;
+  /* border-right: 1px solid #313131; */
 }
 .content-movie{
   margin-top: 60px;
@@ -144,7 +145,7 @@
 }
 .show-comment{
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 20px;
 }
@@ -186,4 +187,8 @@
 }
 .btn-submit:hover{
   color: #1d44c7;
+}
+
+.activeDetail {
+  border-bottom: 3px solid #ddd;
 }

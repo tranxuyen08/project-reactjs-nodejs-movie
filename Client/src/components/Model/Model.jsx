@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import "./Model.css";
 import { AiOutlineClose } from "react-icons/ai";
 import BaseAxios from "../../api/axiosClient";
+import { useNavigate } from "react-router-dom";
 
 const FadingBox = ({ setIsModelOpen }) => {
+  const navigate = useNavigate()
   const handleModalClose = () => {
     setIsModelOpen(false);
   };
@@ -12,23 +14,24 @@ const FadingBox = ({ setIsModelOpen }) => {
     alert("Mua Goi VIP de co the xem phim");
   };
   const handlePaymentVIP = async () => {
-    const UserLogin = JSON.parse(localStorage.getItem('userLogin'))
-    BaseAxios.patch(`/api/v1/users/update/${UserLogin._id}`, {
-      role_subscription: 2,
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          const newUser = response.data?.data
-          localStorage.setItem('userLogin',JSON.stringify(newUser))
-        } else {
+    navigate('/check-out')
+    // const UserLogin = JSON.parse(localStorage.getItem('userLogin'))
+    // BaseAxios.patch(`/api/v1/users/update/${UserLogin._id}`, {
+    //   role_subscription: 2,
+    // })
+    //   .then((response) => {
+    //     if (response.status === 200) {
+    //       const newUser = response.data?.data
+    //       localStorage.setItem('userLogin',JSON.stringify(newUser))
+    //     } else {
 
-          console.log('looix');
-        }
-      })
-      .catch((error) => {
-        // Xử lý lỗi khi gọi API
-        console.error(error);
-      });
+    //       console.log('looix');
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     // Xử lý lỗi khi gọi API
+    //     console.error(error);
+    //   });
   };
   return (
     <div className="modal">

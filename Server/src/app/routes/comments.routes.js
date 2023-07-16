@@ -4,6 +4,6 @@ const {CommentsController} = require('../controllers/comments.controller')
 const checkAuthor = require('../middlewares/checkAuth')
 
 router.post('/',checkAuthor, CommentsController.handlePostComments)
-router.get('/', CommentsController.handleGetComment)
+router.get('/:id', CommentsController.handleGetComment)
 
 module.exports = router;

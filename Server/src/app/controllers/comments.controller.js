@@ -14,12 +14,15 @@ class CommentsController {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   }
-  async handleGetComment(req,res){
+  
+  async handleGetComment(req, res) {
     try {
-      const commentsAll = await CommentsModel.find().populate('idUser')
-      res.status(200).json({ data: commentsAll })
+      const movieId = req.params.id; // Lấy id của bộ phim từ request params (ví dụ: "/comments/:movieId")
+
+      const comments = await CommentsModel.find({ idMovie: movieId }).populate('idUser');
+      res.status(200).json({ data: comments });
     } catch (error) {
-      res.status(500).json({ msg: "Server loi" })
+      res.status(500).json({ msg: "Lỗi máy chủ" });
     }
   }
 }
