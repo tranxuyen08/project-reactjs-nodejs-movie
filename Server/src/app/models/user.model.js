@@ -7,12 +7,13 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema(
   {
     // id: { type: Number, autoIncrement: true, primaryKey: true },
-    firstName: { type: String },
-    lastName: { type: String },
-    email: { type: String, unique: true },
-    password: { type: String },
-    role_admin: {type: Number, default:1, enum : [1,2,3]},
+    firstName: { type: String, require: true, require: true},
+    lastName: { type: String,require: true , require: true},
+    email: { type: String, unique: true , require: true},
+    password: { type: String,require: true , require: true},
+    role_admin: {type: Number, default:1, enum : [1,2]},
     role_subscription: {type: Number,  default:1, enum : [1,2]}, // default 1 xem phim mien phi
+    role_active: {type: Number,  default:1, enum : [1,2]},
     avatar: {type: String, default: "./image/zyro-image (3).png"}
   },
   {

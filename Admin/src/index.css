@@ -1,0 +1,137 @@
+@import "normalize.css";
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&display=swap");
+
+:root {
+  --primary-color: #5880d6;
+  --scroll-up-color: #5880d6;
+
+  --text-color: #050505;
+  --placeholder-color: #90676b;
+  --icon-color: #606770;
+
+
+  --background-main-color: #f0f2f5;
+  --background-modal-main-color: rgba(240, 242, 245, 0.7);
+  --background-content-modal-main-color: rgba(240, 242, 245, 1);
+
+
+  --hover-color: #f0f0f0;
+
+  --black-color: #333333;
+  --white-color: #ffffff;
+
+
+  --main-color-login: #5880d6;
+  --text-login-color: #1c1e21;
+  --white-color-login: #fff;
+  --err-login-color: #cf1717;
+
+  --header-height-size: 6.8rem;
+  --footer-height-size: 3rem;
+  --footer-height-size-mb: 5rem;
+  --sidebar-width-size: 28rem;
+  --padding-size-pc: 2rem;
+  --padding-size-mb: 0.8rem;
+  --padding-main-size: 1.4rem;
+}
+
+@media (max-width: 992px) {
+  :root {
+    --sidebar-width-size: 5rem;
+  }
+}
+
+.dark-theme {
+  --primary-color: #0571ed;
+  --scroll-up-color: #90676b;
+
+  --text-color: #e4e6eb;
+  --placeholder-color: #b0b3b8;
+  --icon-color: #b0b3b8;
+
+
+  --background-main-color: #18191a;
+
+  --background-input-color: #3a3b3c;
+
+  --hover-color: #3a3b3c;
+
+  --black-color: #333333;
+  --white-color: #ffffff;
+}
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  font-size: 62.5%;
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+body {
+  scroll-behavior: smooth;
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-size: 1.6rem;
+  transition: 0.5s;
+  font-family: "Source Sans Pro", sans-serif;
+  background-color: var(--background-main-color);
+  color: var(--text-color);
+}
+
+body::-webkit-scrollbar {
+  width: 1rem;
+}
+
+body::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  width: 0.8rem;
+  background: var(--background-main-color);
+}
+
+a {
+  text-decoration: none;
+}
+
+ul,
+ol {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+select,
+button,
+input {
+  outline: none;
+  border: none;
+}
+
+select,
+option {
+  cursor: pointer;
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+textarea {
+  resize: none;
+  outline: none;
+  border: none;
+}

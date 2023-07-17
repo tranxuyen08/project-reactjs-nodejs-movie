@@ -1,35 +1,36 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
-import {useDispatch} from 'react-redux'
+import { useDispatch } from "react-redux";
 import { login } from "../../redux/reducer/userSlice";
 
-
 const Login = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState({
     email: "",
-    password : ""
-  })
+    password: "",
+  });
   // const [error, setError] = useState("");
   // const [loading, setLoading] = useState(false);
   const handleChangeInput = (e) => {
-    setInputValue({...inputValue, [e.target.name]: e.target.value});
+    setInputValue({ ...inputValue, [e.target.name]: e.target.value });
   };
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    try{
-     const loginValue = inputValue
-      await dispatch(login(loginValue)).unwrap()
-      navigate('/')
-    }catch(err){
+    try {
+      const loginValue = inputValue;
+      const dataLogin = await dispatch(login(loginValue)).unwrap();
+      if (dataLogin && dataLogin.data.data.role_active == 1) {
+        navigate("/");
+      } else {
+        alert('Your account is banned');
+      }
+    } catch (err) {
       console.log(err);
     }
   };
-
 
   return (
     <section className="sect-login">

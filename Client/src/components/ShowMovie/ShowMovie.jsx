@@ -27,7 +27,6 @@ export default function ShowMovie() {
       await dispatch(getMovieShowSlide());
       const data = await dispatch(getMovieRate());
       setToprate(data.payload);
-      console.log(1111, data.payload);
     } catch (err) {
       console.log(err);
     }

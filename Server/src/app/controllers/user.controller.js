@@ -55,7 +55,7 @@ class UserController {
     }
   }
   async handleUpdateUser(req, res) {
-    const {firstName,lastName, email, password, role_admin, role_subscription, avatar } = req.body;
+    const {firstName,lastName, email, password, role_admin,role_active, role_subscription, avatar } = req.body;
     try {
       // Tìm và cập nhật bộ phim dựa trên ID sử dụng Mongoose
       const updatedUser = await User.findByIdAndUpdate(
@@ -67,6 +67,7 @@ class UserController {
           password,
           role_admin,
           role_subscription,
+          role_active,
           avatar
         },
         { new: true } // Trả về bộ phim đã được cập nhật
@@ -82,16 +83,6 @@ class UserController {
       res.status(500).json({ msg: "Lỗi server" });
     }
   }
-  //[GET] /:slug
-  // show(req, res, next) {
-  //   Blog.findOne({ id })
-  //     .lean()
-  //     .then((item) => {
-  //       res.json({ item });
-  //     })
-  //     .catch(next);
-  // }
-
   // [GET] /create
   create(req, res, next) {
     User.find({})
@@ -99,20 +90,21 @@ class UserController {
       .then((blogs) => res.json({ blogs }))
       .catch(next);
   }
-  // //[DELETE]
-  //   delete(req, res, next) {
-  //     Blog.deleteOne({ _id: req.params.id })
-  //       .then(() => res.redirect("back"))
-  //       .catch(next);
-  //   }
-  //   //[POST] /profile/store
-  //   store(req, res, next) {
-  //     const blog = new Blog(req.body);
-  //     blog
-  //       .save()
-  //       .then(() => res.redirect("/"))
-  //       .catch(next);
-  //   }
+  async handleGetUserId(req, res) {
+    const { id } = req.params;
+    try {
+      const user = await User.findById(id).lean();
+      if (user) {
+        res.json({ user });
+      } else {
+        res.status(404).json({ msg: "User not found" });
+      }
+    } catch (error) {
+      console.error("Error handling get user by ID:", error);
+      res.status(500).json({ msg: "Internal Server Error" });
+    }
+  }
+
 }
 
 module.exports = {

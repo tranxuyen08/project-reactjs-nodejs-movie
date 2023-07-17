@@ -18,6 +18,7 @@ const { dropCollection, UserController } = require("../controllers/user.controll
 router.post("/register", UserController.handleRegister);
 router.post("/login", UserController.handleLogin);
 router.get("/", UserController.create);
+router.get("/:id", UserController.handleGetUserId);
 router.patch('/update/:id',UserController.handleUpdateUser)
 
 // router.get("/:slug", UserController.show);

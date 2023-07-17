@@ -34,15 +34,15 @@ function App() {
         {/* kiem tra xem accessToken ddusng khong thi moi chi di den component do */}
         <Route element={<RequiredAuth />}>
           <Route path='/detail/:id' element={<DefaultLayout>
-            <Detail/>
+            <Detail />
           </DefaultLayout>} />
         </Route>
-        <Route path='/playing-movie/:id' element={<DefaultLayout><PlayingMovie/></DefaultLayout>} />
+        <Route path='/playing-movie/:id' element={<DefaultLayout><PlayingMovie /></DefaultLayout>} />
         <Route path='/login' element={<LoginLayout><Login /></LoginLayout>} />
         <Route path='/register' element={<LoginLayout><Register /></LoginLayout>} />
         <Route path='/profile' element={<LayoutProfile><Profile /></LayoutProfile>} />
         <Route path='/bookmarked' element={<LayoutProfile><BookMarked /></LayoutProfile>} />
-        <Route path='/check-out' element={<LayoutProfile><Payment/></LayoutProfile>}/>
+        <Route path='/check-out' element={<LayoutProfile><Payment /></LayoutProfile>} />
       </Routes>
       {/* <Footer /> */}
     </div>

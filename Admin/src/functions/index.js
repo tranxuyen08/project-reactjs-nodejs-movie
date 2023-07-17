@@ -1,0 +1,1 @@
+//chưa các hàm mà có thể tái sử dụng lại được
