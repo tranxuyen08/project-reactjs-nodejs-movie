@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { AiFillEdit, AiOutlineCloudUpload } from "react-icons/ai";
-import { BsSave2 } from "react-icons/bs";
-import "./Profile.css";
-import BaseAxios from "../../api/axiosClient";
+import React, { useState, useEffect } from 'react';
+import { AiFillEdit, AiOutlineCloudUpload } from 'react-icons/ai';
+import { BsSave2 } from 'react-icons/bs';
+import './Profile.css';
+import BaseAxios from '../../api/axiosClient';
 
 const Profile = () => {
-  const userLogin = JSON.parse(localStorage.getItem("userLogin")) || {};
+  const userLogin = JSON.parse(localStorage.getItem('userLogin')) || {};
   const [firstName, setFirstName] = useState(userLogin?.firstName);
   const [lastName, setLastName] = useState(userLogin?.lastName);
   const [originalFirstName, setOriginalFirstName] = useState(userLogin?.firstName);
   const [originalLastName, setOriginalLastName] = useState(userLogin?.lastName);
   const [isEditingFirstName, setIsEditingFirstName] = useState(false);
   const [isEditingLastName, setIsEditingLastName] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [uploadKey, setUploadKey] = useState(0); // Thêm state uploadKey
 
   useEffect(() => {
     setOriginalFirstName(userLogin?.firstName);
@@ -33,29 +35,57 @@ const Profile = () => {
   };
 
   const handleChangeName = (e, name) => {
-    if (name === "firstName") {
+    if (name === 'firstName') {
       setFirstName(e.target.value);
-    } else if (name === "lastName") {
+    } else if (name === 'lastName') {
       setLastName(e.target.value);
     }
   };
 
   const handleSaveFirstName = () => {
     setIsEditingFirstName(false);
-    // Thực hiện lưu trữ giá trị mới vào database hoặc thực hiện các hành động khác
     saveProfileData();
   };
 
   const handleSaveLastName = () => {
     setIsEditingLastName(false);
-    // Thực hiện lưu trữ giá trị mới vào database hoặc thực hiện các hành động khác
     saveProfileData();
   };
 
+  const handleImageChange = (event) => {
+    setSelectedImage(event.target.files[0]);
+  };
+
+  const handleUploadImage = async () => {
+    try {
+      if (!selectedImage) {
+        console.log('No image selected');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('avatar', selectedImage);
+
+      const response = await BaseAxios.post(`/api/v1/users/upload-one/${userLogin._id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.status === 200) {
+        const newUser = response.data?.data;
+        localStorage.setItem("userLogin", JSON.stringify(newUser));
+        setUploadKey(uploadKey + 1); // Tăng giá trị uploadKey lên 1
+      } else {
+        console.log("Error uploading image");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
   const saveProfileData = () => {
-    console.log(firstName);
-    console.log(lastName);
-    const UserLogin = JSON.parse(localStorage.getItem("userLogin"));
+    const UserLogin = JSON.parse(localStorage.getItem('userLogin'));
     BaseAxios.patch(`/api/v1/users/update/${UserLogin._id}`, {
       firstName: firstName,
       lastName: lastName,
@@ -64,17 +94,25 @@ const Profile = () => {
         console.log(response);
         if (response.status === 200) {
           const newUser = response.data?.data;
-          localStorage.setItem("userLogin", JSON.stringify(newUser));
+          localStorage.setItem('userLogin', JSON.stringify(newUser));
+          setUploadKey(uploadKey + 1); // Tăng giá trị uploadKey lên 1
         } else {
-          console.log("looix");
+          console.log('Error updating profile');
         }
       })
       .catch((error) => {
-        // Xử lý lỗi khi gọi API
-        console.error(error);
+        console.error('Error updating profile:', error);
       });
   };
 
+  useEffect(() => {
+    // Xử lý sau khi upload ảnh thành công và thông tin người dùng được cập nhật
+    // Tại đây bạn có thể gọi hàm hoặc thực hiện các tác vụ khác để cập nhật giao diện
+    // Ví dụ: load lại thông tin người dùng
+    const updatedUser = JSON.parse(localStorage.getItem('userLogin')) || {};
+    setFirstName(updatedUser?.firstName);
+    setLastName(updatedUser?.lastName);
+  }, [uploadKey]);
   return (
     <section className="profile">
       <div className="container-middle">
@@ -114,11 +152,20 @@ const Profile = () => {
                       type="text"
                       name="lastName"
                       value={lastName}
-                      className={`change-input ${isEditingLastName ? "editable" : ""}`}
+                      className={`change-input ${
+                        isEditingLastName ? "editable" : ""
+                      }`}
                       onChange={(e) => handleChangeName(e, "lastName")}
                       readOnly={!isEditingLastName}
                     />
-                    <button className="btn btn-edit" onClick={isEditingLastName ? handleSaveLastName : handleEditLastName}>
+                    <button
+                      className="btn btn-edit"
+                      onClick={
+                        isEditingLastName
+                          ? handleSaveLastName
+                          : handleEditLastName
+                      }
+                    >
                       {isEditingLastName ? <BsSave2 /> : <AiFillEdit />}
                     </button>
                   </div>
@@ -130,11 +177,20 @@ const Profile = () => {
                       type="text"
                       name="firstName"
                       value={firstName}
-                      className={`change-input ${isEditingFirstName ? "editable" : ""}`}
+                      className={`change-input ${
+                        isEditingFirstName ? "editable" : ""
+                      }`}
                       onChange={(e) => handleChangeName(e, "firstName")}
                       readOnly={!isEditingFirstName}
                     />
-                    <button className="btn btn-edit" onClick={isEditingFirstName ? handleSaveFirstName : handleEditFirstName}>
+                    <button
+                      className="btn btn-edit"
+                      onClick={
+                        isEditingFirstName
+                          ? handleSaveFirstName
+                          : handleEditFirstName
+                      }
+                    >
                       {isEditingFirstName ? <BsSave2 /> : <AiFillEdit />}
                     </button>
                   </div>
@@ -171,7 +227,20 @@ const Profile = () => {
                     <AiOutlineCloudUpload className="icon-upload" />
                     <p>Upload Image</p>
                   </label>
-                  <input type="file" name="" id="file" style={{ display: "none" }} />
+                  <input
+                    type="file"
+                    id="file"
+                    name="images"
+                    style={{ display: "none" }}
+                    onChange={handleImageChange}
+                  />
+                  <button
+                    className="btn btn-upload"
+                    onClick={handleUploadImage}
+                  >
+                    {" "}
+                    Save
+                  </button>
                 </div>
               </div>
             </div>

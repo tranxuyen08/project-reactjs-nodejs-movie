@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 // const UserController = require("../controllers/user.controller");
-const { dropCollection, UserController } = require("../controllers/user.controller");
+const { dropCollection, UserController, upload } = require("../controllers/user.controller");
 
 
 //drop collection
@@ -19,10 +19,9 @@ router.post("/register", UserController.handleRegister);
 router.post("/login", UserController.handleLogin);
 router.get("/", UserController.create);
 router.get("/:id", UserController.handleGetUserId);
-router.patch('/update/:id',UserController.handleUpdateUser)
+router.patch('/update/:id', UserController.handleUpdateUser)
 
-// router.get("/:slug", UserController.show);
-// router.delete("/:id", UserController.delete);
+router.post('/upload-one/:id', upload, UserController.handleUploadImage);
 
 
 //upload image

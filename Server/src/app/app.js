@@ -9,6 +9,10 @@ const userRoutes = require('../app/routes/user.routes')
 const movieRoutes = require('../app/routes/movie.routes')
 const favoriteRoute = require('../app/routes/favorite.routes')
 const commentsRoute = require('./routes/comments.routes')
+const path = require('path');
+const dirname = path.join(__dirname, '../../public');
+
+app.use(express.static(dirname));
 //middleware
 app.use(express.urlencoded());
 app.use(bodyParser.json());

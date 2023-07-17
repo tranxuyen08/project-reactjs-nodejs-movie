@@ -1,9 +1,55 @@
-const User = require('../models/user.model')
-const jwt = require('jsonwebtoken')
-const sceretKey = require('../../configs/jwtConfigs')
-var bcrypt = require('bcryptjs');
+const User = require('../models/user.model');
+const jwt = require('jsonwebtoken');
+const sceretKey = require('../../configs/jwtConfigs');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const mimetype = filetypes.test(file.mimetype);
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+  if (mimetype && extname) {
+    cb(null, true);
+  } else {
+    cb('Error: Images Only!');
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+}).single('avatar');
 
 class UserController {
+  async handleUploadImage(req, res) {
+    try {
+      if (req.file) {
+        const user = await User.findById(req.params.id);
+        if (user) {
+          user.avatar = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+          await user.save();
+          res.status(200).json({ data: user });
+        } else {
+          res.status(404).json({ msg: 'User not found' });
+        }
+      } else {
+        res.status(400).json({ msg: 'No image selected' });
+      }
+    } catch (err) {
+      console.error('Error handling upload image:', err);
+      res.status(500).json({ msg: 'Internal Server Error' });
+    }
+  }
   async handleRegister(req, res) {
     const { firstName, lastName, email, password } = req.body;
 
@@ -55,7 +101,16 @@ class UserController {
     }
   }
   async handleUpdateUser(req, res) {
-    const {firstName,lastName, email, password, role_admin,role_active, role_subscription, avatar } = req.body;
+    upload(req, res, async (err) => {
+      if (err instanceof multer.MulterError) {
+        console.log(err);
+        return res.status(500).json({ msg: 'Error uploading image' });
+      } else if (err) {
+        console.log(err);
+        return res.status(500).json({ msg: err.message });
+      }
+    })
+    const { firstName, lastName, email, password, role_admin, role_active, role_subscription, avatar } = req.body;
     try {
       // Tìm và cập nhật bộ phim dựa trên ID sử dụng Mongoose
       const updatedUser = await User.findByIdAndUpdate(
@@ -104,9 +159,12 @@ class UserController {
       res.status(500).json({ msg: "Internal Server Error" });
     }
   }
-
 }
+
+
+
 
 module.exports = {
   UserController: new UserController(),
-};
+  upload: upload,
+}
