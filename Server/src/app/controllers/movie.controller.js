@@ -27,6 +27,19 @@ class MovieProductsController {
       res.status(500).json({ msg: "Server loi" })
     }
   }
+  async handleGetAllMoviePagination(req, res) {
+    try {
+      const page = parseInt(req.query._page) || 1;
+      const limit = parseInt(req.query._limit) || 10;
+      const skip = (page - 1) * limit;
+      const totalMovie = await Movie.find();
+      const movies = await Movie.find().skip(skip).limit(limit);
+      res.status(200).json({ data: movies, pagination: { _limit: limit, _page: page, _totalMovie: totalMovie.length } });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ msg: "Lỗi server" });
+    }
+  }
   async handleGetMovieDetails(req, res) {
     try {
       const movieDetail = await Movie.findById(req.params.id)

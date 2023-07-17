@@ -2,9 +2,13 @@ import axios from "axios"
 import BaseAxios from "./axiosClient"
 
 export class MovieAPI {
-  static getAllMovie() {
-    const url = 'http://localhost:8000/api/v1/movie'
-    return axios.get(url)
+  static getAllMovie(paginate, searchValue) {
+    const url = 'http://localhost:8000/api/v1/movie';
+    const params = {
+      page: paginate,
+      limit: 10, 
+    };
+    return axios.get(url, { params: params });
   }
   static getMovieShowSlide() {
     const url = 'http://localhost:8000/api/v1/movie/popular'

@@ -29,7 +29,7 @@ const SideBarAdmin = () => {
               <ul className="">
                 <li className={location.pathname === "/" ? "active" : ""}>
                   <Link to="/">
-                    <AiOutlineUser/>
+                    <AiOutlineUser className="icon"/>
                     <p>User Manager</p>
                   </Link>
                 </li>
@@ -39,7 +39,7 @@ const SideBarAdmin = () => {
                   }
                 >
                   <Link to="/products-manager">
-                    <BiCameraMovie/>
+                    <BiCameraMovie className="icon"/>
                     <p>Products Manager</p>
                   </Link>
                 </li>
@@ -49,7 +49,7 @@ const SideBarAdmin = () => {
                   }
                 >
                   <Link to="/order-manager">
-                    <AiOutlineShoppingCart/>
+                    <AiOutlineShoppingCart className="icon"/>
                     <p>Order Manager</p>
                   </Link>
                 </li>
