@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const sceretKey = require('../../configs/jwtConfigs');
 const multer = require('multer');
 const path = require('path');
+var bcrypt = require('bcryptjs');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

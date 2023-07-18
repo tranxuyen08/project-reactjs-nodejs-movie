@@ -5,14 +5,18 @@ import { useDispatch } from "react-redux";
 import { login } from "../../redux/reducer/userSlice";
 
 const Login = () => {
+  //khi nguoi dung đang đăng nhập mà /login thì tự động xoá
+  useEffect(() => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userLogin");
+  }, []);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState({
     email: "",
     password: "",
   });
-  // const [error, setError] = useState("");
-  // const [loading, setLoading] = useState(false);
+
   const handleChangeInput = (e) => {
     setInputValue({ ...inputValue, [e.target.name]: e.target.value });
   };

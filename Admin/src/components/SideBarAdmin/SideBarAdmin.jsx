@@ -5,7 +5,8 @@ import { BiLogOutCircle, BiCameraMovie } from "react-icons/bi";
 import {
   AiOutlineShoppingCart,
   AiOutlineLogin,
-  AiOutlineUser
+  AiOutlineUser,
+  AiOutlineVideoCameraAdd
 } from "react-icons/ai";
 const SideBarAdmin = () => {
   const location = useLocation();
@@ -51,6 +52,16 @@ const SideBarAdmin = () => {
                   <Link to="/order-manager">
                     <AiOutlineShoppingCart className="icon"/>
                     <p>Order Manager</p>
+                  </Link>
+                </li>
+                <li
+                  className={
+                    location.pathname === "/order-manager" ? "active" : ""
+                  }
+                >
+                  <Link to="/create-product">
+                    <AiOutlineVideoCameraAdd className="icon"/>
+                    <p>Add Product</p>
                   </Link>
                 </li>
               </ul>

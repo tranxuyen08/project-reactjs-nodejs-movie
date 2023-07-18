@@ -1,23 +1,72 @@
 const Movie = require('../models/productsMovie.model');
+const multer = require('multer');
+const path = require('path');
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './public/images');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  const filetypes = /jpeg|jpg|png|gif/;
+  const mimetype = filetypes.test(file.mimetype);
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+  if (mimetype && extname) {
+    cb(null, true);
+  } else {
+    cb(new Error('Error: Images Only!'));
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+}).fields([
+  { name: 'backdrop_path', maxCount: 1 },
+  { name: 'poster', maxCount: 1 },
+]);
 class MovieProductsController {
   async handleAddMovie(req, res) {
-    const { title, vote_average, release_date, overview, video, typeMovie, backdrop_path, poster, role_movie, popularity } = req.body;
-    try {
-      // Kiểm tra phim tồn tại chưa
-      const movie = await Movie.findOne({ title });
-      // Nếu phim đã tồn tại, báo lỗi
-      if (movie) {
-        return res.status(400).json({ msg: 'Movie already exists' });
+
+      const { title, vote_average, release_date, overview, video, typeMovie, role_movie, popularity } = req.body;
+
+      try {
+        // Kiểm tra phim tồn tại chưa
+        const movie = await Movie.findOne({ title });
+        // Nếu phim đã tồn tại, báo lỗi
+        if (movie) {
+          return res.status(400).json({ msg: 'Movie already exists' });
+        }
+
+        const backdrop_path = 'http://localhost:8000/images/' + req.files['backdrop_path'][0].filename;
+        const poster = 'http://localhost:8000/images/' + req.files['poster'][0].filename;
+
+        const newMovie = new Movie({
+          title,
+          vote_average,
+          release_date,
+          overview,
+          video,
+          typeMovie,
+          backdrop_path,
+          poster,
+          role_movie,
+          popularity,
+        });
+
+        await newMovie.save(); // Lưu dữ liệu
+        res.status(200).json({ msg: 'Add Movie Successfully' });
+      } catch (err) {
+        // Lỗi server
+        console.error('Error handling add movie:', err);
+        res.status(500).json({ message: 'Internal Server Error' });
       }
-      const newMovie = new Movie({ title, vote_average, release_date, overview, video, typeMovie, backdrop_path, poster, role_movie, popularity });
-      await newMovie.save(); // Lưu dữ liệu
-      res.status(200).json({ msg: 'Add Movie Successfully' });
-    } catch (err) {
-      // Lỗi server
-      console.error('Error handling add movie:', err);
-      res.status(500).json({ message: 'Internal Server Error' });
-    }
+
   }
   async handleGetMovie(req, res) {
     try {
@@ -140,4 +189,5 @@ class MovieProductsController {
 
 module.exports = {
   MovieProductsController: new MovieProductsController(),
+  upload: upload
 };

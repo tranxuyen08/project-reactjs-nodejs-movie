@@ -1,36 +1,51 @@
+// ./components/ProductManager.js
 import React from "react";
 import BaseAxios from "../../api/axiosInstance";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
-import { FaEdit } from "react-icons/fa";
+import {  FaEdit } from "react-icons/fa";
+import Pagination from "../Pagination/Pagination";
 
 const ProductManager = () => {
   const [dataMovie, setData] = useState([]);
-  const[isLoading, setIsLoading] = useState(false);
-  const handleGetMovie = async () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [pagination, setPagination] = useState({});
+
+  const handleGetMovie = async (page) => {
     try {
-      const response = await BaseAxios.get("/api/v1/movie");
+      const response = await BaseAxios.get("/api/v1/movie", {
+        params: {
+          _page: page,
+          _limit: pagination?._limit,
+        },
+      });
       const managerMovie = response.data.data;
+      setPagination(response.data.pagination);
       setData(managerMovie);
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  const handleOnPageChange = (page) => {
+    handleGetMovie(page);
+  };
+
   const handleDelete = async (id) => {
     try {
-      const response = await BaseAxios.delete(`/api/v1/movie/${id}`);
-      const managerMovie = response?.data?.data;
+      await BaseAxios.delete(`/api/v1/movie/${id}`);
       setIsLoading(!isLoading);
-      setData(managerMovie);
     } catch (error) {
       console.error("Error:", error);
     }
   };
-  const handleEdit = () => {};
-  console.log("dada", dataMovie);
+
+  const handleEdit = () => {
+    // TODO: Implement edit functionality
+  };
+
   useEffect(() => {
-    handleGetMovie();
+    handleGetMovie(pagination?._page || 1);
   }, [isLoading]);
 
   return (
@@ -52,18 +67,16 @@ const ProductManager = () => {
             </tr>
           </thead>
           <tbody>
-            {dataMovie.length > 0 && dataMovie?.map((item, index) => {
-              return (
+            {dataMovie.length > 0 &&
+              dataMovie.map((item, index) => (
                 <tr key={item._id}>
                   <td>{index + 1}</td>
                   <td>
                     <div className="content-img">
                       <img
-                        src={
-                          "https://image.tmdb.org/t/p/" +
-                          "original" +
-                          item?.backdrop_path
-                        }
+                        src={item?.backdrop_path.includes('http://')? item?.backdrop_path :
+                          `
+                        https://image.tmdb.org/t/p/original${item?.backdrop_path}`}
                         alt="product"
                       />
                     </div>
@@ -82,28 +95,10 @@ const ProductManager = () => {
                     />
                   </td>
                 </tr>
-              );
-            })}
+              ))}
           </tbody>
         </table>
-        {/* <button onClick={handleCreate} className="btn-add">
-            <AiOutlineVideoCameraAdd />
-            Thêm Phim
-          </button>
-          {showConfirmModal && (
-            <ModelComfirmDelete
-              onConfirm={handleConfirm}
-              onCancel={handleCancel}
-            />
-          )}
-          {showCreateModal && (
-            <ModelAdmin
-              editProduct={editProduct}
-              setShowCreateModal={setShowCreateModal}
-              handleCreateModalClose={handleCreateModalClose}
-              onClose={handleCreateModalClose}
-            />
-          )} */}
+        <Pagination pagination={pagination} handleOnPageChange={handleOnPageChange} />
       </div>
     </div>
   );

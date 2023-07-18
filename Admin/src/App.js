@@ -7,6 +7,7 @@ import ProductManager from './components/ProductManager/ProductManager';
 import Order from './components/Order/Order';
 import LoginAdmin from './components/Login/LoginAdmin';
 import RequiredAdmin from './components/RequireAdmin/RequireAdmin';
+import CreateProduct from './components/CreateProduct/CreateProduct';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/' element={<DefaultLayout><Users /></DefaultLayout>} />
           <Route path='/products-manager' element={<DefaultLayout><ProductManager /></DefaultLayout>} />
           <Route path='/order-manager' element={<DefaultLayout><Order /></DefaultLayout>} />
+          <Route path='/create-product' element={<DefaultLayout><CreateProduct /></DefaultLayout>} />
         </Route>
         <Route path='/Login' index element={<LoginAdmin />} />
       </Routes>
