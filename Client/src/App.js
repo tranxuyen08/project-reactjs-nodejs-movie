@@ -17,7 +17,6 @@ import Detail from './components/Detail/Detail';
 import PlayingMovie from './components/PlayingMovie/PlayingMovie';
 import BookMarked from './components/BookMarked/BookMarked';
 import RequiredAuth from './components/RequireAuth';
-import Payment from './components/Payment/Payment';
 function App() {
   return (
     <div >
@@ -36,13 +35,12 @@ function App() {
           <Route path='/detail/:id' element={<DefaultLayout>
             <Detail />
           </DefaultLayout>} />
+          <Route path='/bookmarked' element={<LayoutProfile><BookMarked /></LayoutProfile>} />
+          <Route path='/profile' element={<LayoutProfile><Profile /></LayoutProfile>} />
+          <Route path='/playing-movie/:id' element={<DefaultLayout><PlayingMovie /></DefaultLayout>} />
         </Route>
-        <Route path='/playing-movie/:id' element={<DefaultLayout><PlayingMovie /></DefaultLayout>} />
         <Route path='/login' element={<LoginLayout><Login /></LoginLayout>} />
         <Route path='/register' element={<LoginLayout><Register /></LoginLayout>} />
-        <Route path='/profile' element={<LayoutProfile><Profile /></LayoutProfile>} />
-        <Route path='/bookmarked' element={<LayoutProfile><BookMarked /></LayoutProfile>} />
-        <Route path='/check-out' element={<LayoutProfile><Payment /></LayoutProfile>} />
       </Routes>
       {/* <Footer /> */}
     </div>

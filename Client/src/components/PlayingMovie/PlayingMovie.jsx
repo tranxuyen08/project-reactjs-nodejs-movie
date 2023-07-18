@@ -5,7 +5,7 @@ import "./PlayingMovie.css";
 import BaseAxios from "../../api/axiosClient";
 import { useParams } from "react-router-dom";
 import { BiSolidLike } from "react-icons/bi";
-const PlayingMovie = ({ reCallApiComment }) => {
+const PlayingMovie = () => {
   const params = useParams();
   const [movie, setMovie] = useState();
   const [width, setWidth] = useState("560");
