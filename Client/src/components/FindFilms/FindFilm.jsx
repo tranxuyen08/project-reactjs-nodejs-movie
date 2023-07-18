@@ -18,8 +18,8 @@ const FindFilm = () => {
 
   const handleGetAPI = async () => {
     try {
-      setIsLoad(false)
       await dispatch(getAll());
+      setIsLoad(false)
     } catch (err) {
       setIsLoad(false)
       console.log(err);

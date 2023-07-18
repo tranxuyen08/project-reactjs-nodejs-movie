@@ -5,6 +5,8 @@ import "./PlayingMovie.css";
 import BaseAxios from "../../api/axiosClient";
 import { useParams } from "react-router-dom";
 import { BiSolidLike } from "react-icons/bi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const PlayingMovie = () => {
   const params = useParams();
   const [movie, setMovie] = useState();
@@ -29,7 +31,7 @@ const PlayingMovie = () => {
     try {
       const response = await BaseAxios.get(`/api/v1/favorite`);
       const favorites = response.data;
-      const isFavorite = favorites.some(
+      const isFavorite = favorites?.some(
         (favorite) => favorite?.idMovie === params?.id
       );
       setIsCheckFavorite(isFavorite);
@@ -82,11 +84,29 @@ const PlayingMovie = () => {
       if (isCheckFavorite) {
         await BaseAxios.post(`/api/v1/favorite`, requestData);
         setIsCheckFavorite(!isCheckFavorite);
-        console.log("Đã xoá yêu thích");
+        toast.success("Unfavorite Successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       } else {
+        toast.success("Favorite Successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
         await BaseAxios.post(`/api/v1/favorite`, requestData);
         setIsCheckFavorite(!isCheckFavorite);
-        console.log("Đã thích");
       }
     } catch (error) {
       console.log("Error:", error);
@@ -111,6 +131,20 @@ const PlayingMovie = () => {
   };
   return (
     <section className="playing-movie">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
       <div className="container-middle">
         <div className="wrapper-playing">
           <div className="wrapper-video">
