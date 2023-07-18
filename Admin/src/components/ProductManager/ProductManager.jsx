@@ -6,6 +6,7 @@ import { AiFillDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import Pagination from "../Pagination/Pagination";
 import Modal from "../Modal/Modal";
+import LoadingComponent from "../Loading";
 
 const ProductManager = () => {
   const [dataMovie, setData] = useState([]);
@@ -14,6 +15,8 @@ const ProductManager = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [isLoad, setIsLoad] = useState(true); // lần đầu mount component thì luôn để true để chờ useEffect gọi api về
+
   const handleGetMovie = async (page) => {
     try {
       const response = await BaseAxios.get("/api/v1/movie", {
@@ -25,7 +28,9 @@ const ProductManager = () => {
       const managerMovie = response.data.data;
       setPagination(response.data.pagination);
       setData(managerMovie);
+      setIsLoad(false)
     } catch (error) {
+      setIsLoad(false)
       console.error("Error:", error);
     }
   };
@@ -38,7 +43,9 @@ const ProductManager = () => {
     try {
       await BaseAxios.delete(`/api/v1/movie/${id}`);
       setIsLoading(!isLoading);
+      setIsLoad(false)
     } catch (error) {
+      setIsLoad(false)
       console.error("Error:", error);
     }
   };
@@ -59,6 +66,7 @@ const ProductManager = () => {
 
   return (
     <div className="content-user">
+       {isLoad && <LoadingComponent/>}
       <div className="table-content">
         <div className="wrapper-title">
           <span className="sperator"></span>

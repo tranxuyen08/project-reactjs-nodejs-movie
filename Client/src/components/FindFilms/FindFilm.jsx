@@ -7,17 +7,21 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../Pagination/Pagination";
 import querystring from "query-string";
 import BaseAxios from "../../api/axiosClient";
+import LoadingComponent from "../Loading/Loading";
 
 const FindFilm = () => {
   const dispatch = useDispatch();
   const movies = useSelector((state) => state?.movie.data?.data);
   const pagination = useSelector((state) => state?.movie?.data?.pagination);
   const [dataMovie , setDataMovie] = useState([])
+  const [isLoad, setIsLoad] = useState(true); // lần đầu mount component thì luôn để true để chờ useEffect gọi api về
 
   const handleGetAPI = async () => {
     try {
+      setIsLoad(false)
       await dispatch(getAll());
     } catch (err) {
+      setIsLoad(false)
       console.log(err);
     }
   };
@@ -51,6 +55,7 @@ const FindFilm = () => {
   }, [filter]);
   return (
     <section className="find-film">
+      {isLoad && <LoadingComponent/>}
       <div className="wrapper-find-film">
         <h2 className="title-h2">FIND FILMS THAT BEST FIT YOU</h2>
         <ul className="list-card">

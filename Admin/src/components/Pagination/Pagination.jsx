@@ -1,8 +1,12 @@
 // ./Pagination/Pagination.js
 import React from "react";
 import "./Pagination.css";
+import LoadingComponent from "../Loading";
+import { useState } from "react";
 
 const Pagination = ({ pagination, handleOnPageChange }) => {
+  const [isLoad, setIsLoad] = useState(true); // lần đầu mount component thì luôn để true để chờ useEffect gọi api về
+
   const totalPage = Math.ceil(
     Number(pagination?._totalMovie) / Number(pagination?._limit)
   );
