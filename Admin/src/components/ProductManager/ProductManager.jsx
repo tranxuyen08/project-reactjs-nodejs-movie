@@ -3,14 +3,17 @@ import React from "react";
 import BaseAxios from "../../api/axiosInstance";
 import { useEffect, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
-import {  FaEdit } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import Pagination from "../Pagination/Pagination";
+import Modal from "../Modal/Modal";
 
 const ProductManager = () => {
   const [dataMovie, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pagination, setPagination] = useState({});
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editData, setEditData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const handleGetMovie = async (page) => {
     try {
       const response = await BaseAxios.get("/api/v1/movie", {
@@ -39,14 +42,20 @@ const ProductManager = () => {
       console.error("Error:", error);
     }
   };
-
-  const handleEdit = () => {
-    // TODO: Implement edit functionality
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
+  const handleEdit = (data) => {
+    setIsModalOpen(true);
+    setEditData(data);
+  };
+  const handleUpdateSuccess = () => {
+    setUpdateSuccess(!updateSuccess);
+  };
   useEffect(() => {
     handleGetMovie(pagination?._page || 1);
-  }, [isLoading]);
+  }, [isLoading, updateSuccess]);
 
   return (
     <div className="content-user">
@@ -74,9 +83,12 @@ const ProductManager = () => {
                   <td>
                     <div className="content-img">
                       <img
-                        src={item?.backdrop_path.includes('http://')? item?.backdrop_path :
-                          `
-                        https://image.tmdb.org/t/p/original${item?.backdrop_path}`}
+                        src={
+                          item?.backdrop_path.includes("http://")
+                            ? item?.backdrop_path
+                            : `
+                        https://image.tmdb.org/t/p/original${item?.backdrop_path}`
+                        }
                         alt="product"
                       />
                     </div>
@@ -98,8 +110,16 @@ const ProductManager = () => {
               ))}
           </tbody>
         </table>
-        <Pagination pagination={pagination} handleOnPageChange={handleOnPageChange} />
+        <Pagination
+          pagination={pagination}
+          handleOnPageChange={handleOnPageChange}
+        />
       </div>
+      <Modal
+        isOpen={isModalOpen}
+        handleClose={handleCloseModal}
+        editData={editData}
+      />
     </div>
   );
 };

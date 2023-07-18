@@ -1,25 +1,26 @@
-import React, { useState } from "react";
-import "./CreateProduct.css";
+import React, { useState, useEffect } from "react";
+import "./Modal.css";
+import { AiOutlineCloudUpload, AiOutlineCloseCircle } from "react-icons/ai";
 import BaseAxios from "../../api/axiosInstance";
-import {AiOutlineCloudUpload} from 'react-icons/ai'
 
-function CreateProduct() {
+const Modal = ({ isOpen, handleClose, editData, handleUpdateSuccess }) => {
   const [title, setTitle] = useState("");
   const [video, setTrailer] = useState("");
   const [overview, setOverview] = useState("");
   const [typeMovie, setTypes] = useState([]);
-  const [backdrop_paths, setBackdropPaths] = useState([]);
+  const [backdropPaths, setBackdropPaths] = useState([]);
   const [posters, setPosters] = useState([]);
-  const [role_movie, setRole] = useState("");
-  const [valueCreate, setvalueCreate] = useState({
-    title: "",
-    video: "",
-    overview: "",
-    types: "",
-    backdrop_path: "",
-    poster: "",
-    role: "",
-  });
+  const [roleMovie, setRole] = useState("");
+
+  useEffect(() => {
+    if (editData) {
+      setTitle(editData.title || "");
+      setTrailer(editData.video || "");
+      setOverview(editData.overview || "");
+      setTypes(editData.types || []);
+      setRole(editData.role_movie || "");
+    }
+  }, [editData]);
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -35,15 +36,11 @@ function CreateProduct() {
 
   const handleTypeChange = (event) => {
     const { value, checked } = event.target;
-
-    // Tạo một bản sao mới của mảng types
     const newTypes = [...typeMovie];
 
     if (checked) {
-      // Nếu checkbox được chọn, thêm giá trị vào mảng
       newTypes.push(value);
     } else {
-      // Nếu checkbox bị bỏ chọn, loại bỏ giá trị khỏi mảng
       const index = newTypes.indexOf(value);
       if (index > -1) {
         newTypes.splice(index, 1);
@@ -69,18 +66,17 @@ function CreateProduct() {
     event.preventDefault();
 
     const formData = new FormData();
-    console.log(123123, formData);
     formData.append("title", title);
     formData.append("trailer", video);
     formData.append("overview", overview);
     formData.append("typeMovie", typeMovie.join(","));
-    for (let i = 0; i < backdrop_paths.length; i++) {
-      formData.append("backdrop_path", backdrop_paths[i]);
+    for (let i = 0; i < backdropPaths.length; i++) {
+      formData.append("backdrop_path", backdropPaths[i]);
     }
     for (let i = 0; i < posters.length; i++) {
       formData.append("poster", posters[i]);
     }
-    formData.append("role_movie", role_movie);
+    formData.append("role_movie", roleMovie);
 
     try {
       const response = await BaseAxios.post(
@@ -94,7 +90,9 @@ function CreateProduct() {
       );
 
       const newMovie = response.data;
-      console.log(12311, newMovie);
+      console.log("New movie created:", newMovie);
+
+      // Reset form values
       setTitle("");
       setTrailer("");
       setOverview("");
@@ -103,21 +101,46 @@ function CreateProduct() {
       setPosters([]);
       setRole("");
 
-      console.log("New movie created:", newMovie);
+      // Close the modal
+      handleClose();
     } catch (error) {
       console.error("Error creating movie:", error);
     }
   };
+  const handleUpdate = async () =>{
+    try {
+      await BaseAxios.patch(`/api/v1/movie/${editData?._id}`, {
+        title,
+        video,
+        overview,
+        typeMovie,
+        backdrop_paths: backdropPaths,
+        posters,
+        role_movie: roleMovie
+      });
+
+      handleUpdateSuccess();
+      handleClose();
+    } catch (error) {
+      console.error("Error updating movie:", error);
+    }
+  }
+  if (!isOpen) {
+    return null;
+  }
 
   return (
-    <div className="sect-create create-product-form-container">
-      <div className="container-middle">
-        <div className="wrapper-content-add">
-          <div className="wrapper-title">
-            <span className="sperator"></span>
-            <span className="title-page">Create product</span>
-          </div>
-          <form onSubmit={handleSubmit} encType="multipart/form-data">
+    <section className="sect-modal">
+      <div className="wrapper-modal">
+        <div className="wrapper-form">
+          <form
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+            className="bkg-form"
+          >
+            <button className="btn-close" onClick={handleClose}>
+              <AiOutlineCloseCircle className="close" />
+            </button>
             <div className="form-group">
               <label htmlFor="title">Title:</label>
               <input
@@ -144,13 +167,15 @@ function CreateProduct() {
 
             <div className="form-group">
               <label htmlFor="overview">Overview:</label>
-              <textarea
-                id="overview"
-                name="overview"
-                value={overview}
-                onChange={handleOverviewChange}
+              <input
+                style={{ display: "none" }}
+                type="file"
+                id="backdrop"
+                name="backdrop_path"
+                accept="image/jpeg, image/jpg, image/png"
+                onChange={handleBackdropChange}
                 required
-              ></textarea>
+              />
             </div>
 
             <div className="form-group">
@@ -194,34 +219,35 @@ function CreateProduct() {
                     checked={typeMovie.includes("drama")}
                     onChange={handleTypeChange}
                   />
-                   Drama
+                  Drama
                 </label>
               </div>
             </div>
 
             <div className="form-group">
               <label htmlFor="backdrop">Backdrop:</label>
-              <label className="upload-wrapper" htmlFor="backdrop"><AiOutlineCloudUpload/>
-              <p>Upload file here !</p>
+              <label className="upload-wrapper" htmlFor="backdrop">
+                <AiOutlineCloudUpload />
+                <p>Upload file here!</p>
               </label>
               <input
-              style={{display:'none'}}
+                style={{ display: "none" }}
                 type="file"
-                id="backdrop"
-                name="backdrop_path"
+                id="poster"
+                name="poster"
                 accept="image/jpeg, image/jpg, image/png"
-                onChange={handleBackdropChange}
                 required
               />
             </div>
 
             <div className="form-group">
               <label htmlFor="poster">Poster:</label>
-              <label className="upload-wrapper" htmlFor="poster"><AiOutlineCloudUpload/>
-              <p>Upload file here !</p>
+              <label className="upload-wrapper" htmlFor="poster">
+                <AiOutlineCloudUpload />
+                <p>Upload file here!</p>
               </label>
               <input
-                style={{display:'none'}}
+                style={{ display: "none" }}
                 type="file"
                 id="poster"
                 name="poster"
@@ -236,7 +262,7 @@ function CreateProduct() {
               <select
                 id="role"
                 name="role_movie"
-                value={role_movie}
+                value={roleMovie}
                 onChange={handleRoleChange}
                 required
               >
@@ -246,14 +272,16 @@ function CreateProduct() {
               </select>
             </div>
 
-            <button type="submit" className="btn btn-create">
-              Tạo sản phẩm
-            </button>
+            <div className="form-group center">
+              <button onClick={handleUpdate} type="submit" className="btn btn-edit">
+                Update
+              </button>
+            </div>
           </form>
         </div>
       </div>
-    </div>
+    </section>
   );
-}
+};
 
-export default CreateProduct;
+export default Modal;
