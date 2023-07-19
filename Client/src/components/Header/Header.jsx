@@ -11,8 +11,7 @@ const Header = () => {
       <header className="header">
         <div className="wrapper-content-header">
           <div className="header-left">
-            <Link to="/tv-show">TV Show</Link>
-            <Link to="/tv-show">Movie</Link>
+            <Link to="/">Movie</Link>
           </div>
           <div className="header-right">
             <p>

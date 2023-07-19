@@ -13,3 +13,7 @@
   width: 100%;
   margin-bottom: 20px;
 }
+
+.swiper.mySwiper{
+  padding-top: 0;
+}

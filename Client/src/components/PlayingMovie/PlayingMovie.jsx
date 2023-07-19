@@ -186,7 +186,7 @@ const PlayingMovie = () => {
           <div className="comment">
             <div className="content-comment">
               <h3 className="">Comments:</h3>
-              <ul id="comment-list">
+              {comment?.length > 0 && <ul id="comment-list">
                 {comment &&
                   comment?.map((item) => {
                     return (
@@ -211,7 +211,7 @@ const PlayingMovie = () => {
                       </li>
                     );
                   })}
-              </ul>
+              </ul>}
               <form className="comment-form" onSubmit={handleComment}>
                 <input
                   type="text"

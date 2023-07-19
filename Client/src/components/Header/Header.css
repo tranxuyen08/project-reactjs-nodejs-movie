@@ -15,16 +15,21 @@
   gap: 20px;
 }
 .header-left a{
+  font-weight: 600;
+  padding-bottom: 2px;
+  border-bottom: 3px solid #ddd;
   color: var(--secondary-color);
 }
 .header-right{
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 20px;
+
 }
 .avatar{
-  width: 45px;
+  display: block;
+  width: 45px !important;
   height: 45px;
 }
 .header-right > p{

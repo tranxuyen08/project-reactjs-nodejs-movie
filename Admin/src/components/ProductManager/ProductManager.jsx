@@ -1,4 +1,3 @@
-// ./components/ProductManager.js
 import React from "react";
 import BaseAxios from "../../api/axiosInstance";
 import { useEffect, useState } from "react";
@@ -7,6 +6,9 @@ import { FaEdit } from "react-icons/fa";
 import Pagination from "../Pagination/Pagination";
 import Modal from "../Modal/Modal";
 import LoadingComponent from "../Loading";
+import ModelComfirmDelete from "../ModalComfirm/ModalConfirm";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductManager = () => {
   const [dataMovie, setData] = useState([]);
@@ -15,7 +17,9 @@ const ProductManager = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [isLoad, setIsLoad] = useState(true); // lần đầu mount component thì luôn để true để chờ useEffect gọi api về
+  const [isLoad, setIsLoad] = useState(true);
+  const [deleteProductId, setDeleteProductId] = useState(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const handleGetMovie = async (page) => {
     try {
@@ -28,9 +32,9 @@ const ProductManager = () => {
       const managerMovie = response.data.data;
       setPagination(response.data.pagination);
       setData(managerMovie);
-      setIsLoad(false)
+      setIsLoad(false);
     } catch (error) {
-      setIsLoad(false)
+      setIsLoad(false);
       console.error("Error:", error);
     }
   };
@@ -39,34 +43,71 @@ const ProductManager = () => {
     handleGetMovie(page);
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await BaseAxios.delete(`/api/v1/movie/${id}`);
-      setIsLoading(!isLoading);
-      setIsLoad(false)
-    } catch (error) {
-      setIsLoad(false)
-      console.error("Error:", error);
-    }
-  };
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleDelete = (id) => {
+    setDeleteProductId(id);
+    setShowConfirmModal(true);
+  };
+
+  const handleCancel = () => {
+    setShowConfirmModal(false);
+  };
+
+  const handleConfirm = async () => {
+    setShowConfirmModal(false);
+    try {
+      await BaseAxios.delete(`/api/v1/movie/${deleteProductId}`);
+      setIsLoading(!isLoading);
+      setIsLoad(false);
+      toast.success("Delete successfuly!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } catch (error) {
+      setIsLoad(false);
+      console.error("Error:", error);
+    }
   };
 
   const handleEdit = (data) => {
     setIsModalOpen(true);
     setEditData(data);
   };
+
   const handleUpdateSuccess = () => {
     setUpdateSuccess(!updateSuccess);
   };
+
   useEffect(() => {
     handleGetMovie(pagination?._page || 1);
   }, [isLoading, updateSuccess]);
 
   return (
     <div className="content-user">
-       {isLoad && <LoadingComponent/>}
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
+      {isLoad && <LoadingComponent />}
       <div className="table-content">
         <div className="wrapper-title">
           <span className="sperator"></span>
@@ -102,7 +143,11 @@ const ProductManager = () => {
                     </div>
                   </td>
                   <td>{item?.title}</td>
-                  <td>{Array.isArray(item.typeMovie) ? item.typeMovie.join(", ") : item.typeMovie}</td>
+                  <td>
+                    {Array.isArray(item.typeMovie)
+                      ? item.typeMovie.join(", ")
+                      : item.typeMovie}
+                  </td>
                   <td>{item?.role_movie === 1 ? "Free" : "No Free"}</td>
                   <td>
                     <AiFillDelete
@@ -123,6 +168,9 @@ const ProductManager = () => {
           handleOnPageChange={handleOnPageChange}
         />
       </div>
+      {showConfirmModal && (
+        <ModelComfirmDelete onConfirm={handleConfirm} onCancel={handleCancel} />
+      )}
       <Modal
         isOpen={isModalOpen}
         handleClose={handleCloseModal}

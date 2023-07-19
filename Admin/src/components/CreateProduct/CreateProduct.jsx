@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import "./CreateProduct.css";
 import BaseAxios from "../../api/axiosInstance";
-import {AiOutlineCloudUpload} from 'react-icons/ai'
+import { AiOutlineCloudUpload } from "react-icons/ai";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function CreateProduct() {
   const [title, setTitle] = useState("");
@@ -69,7 +71,6 @@ function CreateProduct() {
     event.preventDefault();
 
     const formData = new FormData();
-    console.log(123123, formData);
     formData.append("title", title);
     formData.append("trailer", video);
     formData.append("overview", overview);
@@ -102,7 +103,16 @@ function CreateProduct() {
       setBackdropPaths([]);
       setPosters([]);
       setRole("");
-
+      toast.success('Add new product successfully!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
       console.log("New movie created:", newMovie);
     } catch (error) {
       console.error("Error creating movie:", error);
@@ -111,6 +121,20 @@ function CreateProduct() {
 
   return (
     <div className="sect-create create-product-form-container">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
       <div className="container-middle">
         <div className="wrapper-content-add">
           <div className="wrapper-title">
@@ -194,18 +218,19 @@ function CreateProduct() {
                     checked={typeMovie.includes("drama")}
                     onChange={handleTypeChange}
                   />
-                   Drama
+                  Drama
                 </label>
               </div>
             </div>
 
             <div className="form-group">
               <label htmlFor="backdrop">Backdrop:</label>
-              <label className="upload-wrapper" htmlFor="backdrop"><AiOutlineCloudUpload/>
-              <p>Upload file here !</p>
+              <label className="upload-wrapper" htmlFor="backdrop">
+                <AiOutlineCloudUpload />
+                <p>Upload file here !</p>
               </label>
               <input
-              style={{display:'none'}}
+                style={{ display: "none" }}
                 type="file"
                 id="backdrop"
                 name="backdrop_path"
@@ -217,11 +242,12 @@ function CreateProduct() {
 
             <div className="form-group">
               <label htmlFor="poster">Poster:</label>
-              <label className="upload-wrapper" htmlFor="poster"><AiOutlineCloudUpload/>
-              <p>Upload file here !</p>
+              <label className="upload-wrapper" htmlFor="poster">
+                <AiOutlineCloudUpload />
+                <p>Upload file here !</p>
               </label>
               <input
-                style={{display:'none'}}
+                style={{ display: "none" }}
                 type="file"
                 id="poster"
                 name="poster"

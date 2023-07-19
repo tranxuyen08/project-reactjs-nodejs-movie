@@ -3,7 +3,8 @@ import "./UserManager.css";
 import BaseAxios from "../../api/axiosInstance";
 import { useState, useEffect } from "react";
 import LoadingComponent from "../Loading";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const Users = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,17 +16,17 @@ const Users = () => {
       const managerUser = response.data.blogs;
       setData(managerUser);
       //set loading false khi nhận dữ liệu
-      setIsLoad(false)
+      setIsLoad(false);
     } catch (error) {
       //cũng set loading false khi call api thất bại
-      setIsLoad(false)
+      setIsLoad(false);
       console.error("Error:", error);
     }
   };
 
   const handleUpdateRoleUser = async (id) => {
     //trước khi gọi api ,thì set Loading true
-    setIsLoad(true)
+    setIsLoad(true);
     try {
       const response = await BaseAxios.get(`/api/v1/users/${id}`);
       const updatedUser = response.data.user;
@@ -42,9 +43,19 @@ const Users = () => {
         `/api/v1/users/update/${id}`,
         updatedUser
       );
+      toast.success('Successfuly!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
       handleGetUser();
       //Khi call thành công thì set loading false
-      setIsLoad(false)
+      setIsLoad(false);
       if (patchResponse.data.success) {
         setIsLoading(!isLoading);
       } else {
@@ -52,7 +63,7 @@ const Users = () => {
       }
     } catch (error) {
       //khi call thất bại thì cũng set loading false
-      setIsLoad(false)
+      setIsLoad(false);
       console.error("Error:", error);
     }
   };
@@ -63,9 +74,23 @@ const Users = () => {
 
   return (
     <div className="content-user">
-      {isLoad && <LoadingComponent/>}
+      {isLoad && <LoadingComponent />}
 
       <div className="table-content">
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        {/* Same as */}
+        <ToastContainer />
         <div className="wrapper-title">
           <span className="sperator"></span>
           <span className="title-page">Quản Lý Người Dùng</span>
