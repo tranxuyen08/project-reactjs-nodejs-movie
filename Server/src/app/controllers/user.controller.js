@@ -4,7 +4,7 @@ const sceretKey = require('../../configs/jwtConfigs');
 const multer = require('multer');
 const path = require('path');
 var bcrypt = require('bcryptjs');
-
+const sendRegistrationEmail = require('../utils/mailler.utils')
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, './public/images');
@@ -52,6 +52,7 @@ class UserController {
     }
   }
   async handleRegister(req, res) {
+
     const { firstName, lastName, email, password } = req.body;
 
     try {
@@ -67,6 +68,7 @@ class UserController {
       const hashedPassword = await bcrypt.hash(password, salt); // Mã hóa password
       const newUser = new User({ firstName, lastName, email, password: hashedPassword });
       await newUser.save(); // Lưu dữ liệu
+      await sendRegistrationEmail(newUser)
 
       res.status(200).json({ msg: 'Register Successfully' });
     } catch (error) {
