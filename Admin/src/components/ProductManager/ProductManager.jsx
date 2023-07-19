@@ -102,7 +102,7 @@ const ProductManager = () => {
                     </div>
                   </td>
                   <td>{item?.title}</td>
-                  <td>{item?.typeMovie}</td>
+                  <td>{Array.isArray(item.typeMovie) ? item.typeMovie.join(", ") : item.typeMovie}</td>
                   <td>{item?.role_movie === 1 ? "Free" : "No Free"}</td>
                   <td>
                     <AiFillDelete

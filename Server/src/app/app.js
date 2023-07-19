@@ -12,6 +12,8 @@ const commentsRoute = require('./routes/comments.routes')
 const path = require('path');
 const dirname = path.join(__dirname, '../../public');
 
+const corsOrigin = ['https://project-reactjs-nodejs-movie.vercel.app', 'http://localhost:3000','https://project-reactjs-nodejs-movie-tnyl.vercel.app']
+
 app.use(express.static(dirname));
 //middleware
 app.use(express.urlencoded());
@@ -20,7 +22,7 @@ app.use(morgan('dev'));
 app.use(helmet());
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: corsOrigin,
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
 };

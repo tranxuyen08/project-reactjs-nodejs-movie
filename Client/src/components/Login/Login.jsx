@@ -3,8 +3,14 @@ import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/reducer/userSlice";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
   //khi nguoi dung đang đăng nhập mà /login thì tự động xoá
   useEffect(() => {
     localStorage.removeItem("accessToken");
@@ -17,27 +23,73 @@ const Login = () => {
     password: "",
   });
 
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { email: "", password: "" };
+
+    if (!inputValue.email) {
+      newErrors.email = "Email is required.";
+      valid = false;
+    }
+
+    if (!inputValue.password) {
+      newErrors.password = "Password is required.";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
   const handleChangeInput = (e) => {
     setInputValue({ ...inputValue, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleSignIn = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
     try {
       const loginValue = inputValue;
       const dataLogin = await dispatch(login(loginValue)).unwrap();
       if (dataLogin && dataLogin.data.data.role_active == 1) {
         navigate("/");
       } else {
-        alert('Your account is banned');
+        alert("Your account is banned");
       }
     } catch (err) {
+      toast.error("Email or password is incorrect!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
       console.log(err);
     }
   };
 
   return (
     <section className="sect-login">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
       <div className="bkg-img"></div>
       <div className="container">
         <div className="wrapper-login">
@@ -108,14 +160,18 @@ const Login = () => {
               name="email"
               type="email"
               placeholder="Email.."
+              value={inputValue.email}
             />
+            {errors.email && <p className="error">{errors.email}</p>}
             <input
               onChange={handleChangeInput}
               className="password"
               name="password"
               type="password"
               placeholder="Password.."
+              value={inputValue.password}
             />
+            {errors.password && <p className="error">{errors.password}</p>}
             <input className="btn btn-signin" type="submit" value="Sign In" />
           </form>
           <p className="text-sign-up">

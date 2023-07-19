@@ -131,3 +131,7 @@
 .user-name>input::placeholder {
   color: white;
 }
+
+.error{
+  color: red;
+}

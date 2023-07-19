@@ -171,7 +171,6 @@ const Profile = () => {
                     />
                     <button className="btn btn-edit">
                       {/* <BiRightArrow /> */}
-                      <AiFillEdit />
                     </button>
                   </div>
                 </div>
@@ -237,8 +236,6 @@ const Profile = () => {
                       readOnly
                     />
                     <button className="btn btn-edit">
-                      {/* <BiRightArrow /> */}
-                      <AiFillEdit />
                     </button>
                   </div>
                 </div>

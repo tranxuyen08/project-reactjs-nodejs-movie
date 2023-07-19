@@ -14,7 +14,7 @@ const Pagination = (props) => {
 
   return (
     <div className="pagination">
-      <button disabled={_page <= 1} onClick={() => handleClick(_page - 1)}>
+      <button className="btn btn-action" disabled={_page <= 1} onClick={() => handleClick(_page - 1)}>
         prev
       </button>
       {Array.from({ length: totalPage }).map((_, index) => (
@@ -27,7 +27,7 @@ const Pagination = (props) => {
           {index + 1}
         </p>
       ))}
-      <button
+      <button className="btn btn-action"
         disabled={_page >= totalPage}
         onClick={() => handleClick(_page + 1)}
       >
