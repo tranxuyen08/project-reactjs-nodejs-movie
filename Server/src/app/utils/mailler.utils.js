@@ -12,7 +12,6 @@ const transporter = nodemailer.createTransport({
 
 // Hàm gửi email thông báo cho người dùng
 const sendRegistrationEmail = async (user) => {
-  console.log(user)
   const { lastName, email } = user;
 
   // Nội dung email

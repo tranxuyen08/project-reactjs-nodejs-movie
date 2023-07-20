@@ -12,7 +12,7 @@ const commentsRoute = require('./routes/comments.routes')
 const path = require('path');
 const dirname = path.join(__dirname, '../../public');
 
-const corsOrigin = ['https://project-reactjs-nodejs-movie.vercel.app', 'http://localhost:3000','https://project-reactjs-nodejs-movie-tnyl.vercel.app']
+const corsOrigin = ['https://project-reactjs-nodejs-movie.vercel.app', 'http://localhost:3000','http://localhost:8000','https://project-reactjs-nodejs-movie-tnyl.vercel.app']
 
 app.use(express.static(dirname));
 //middleware
